@@ -17,9 +17,23 @@ namespace Actividad3LengProg3.Controllers
         }
 
         // GET: EstudiantesController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Registrar(EstudianteViewModel estudiante)
         {
-            return View();
+            if (estudiante.EstaBecado == false)
+            {
+                estudiante.PorcentajeBeca = null;
+            }
+
+            if (ModelState.IsValid)
+            {
+                estudiantes.Add(estudiante);
+                return RedirectToAction("Lista");
+            }
+
+            ViewBag.Carreras = new List<string> { "Ingeniería en Sistemas", "Contabilidad", "Administración", "Psicología" };
+            ViewBag.Turnos = new List<string> { "Mañana", "Tarde", "Noche" };
+            ViewBag.TipoIngreso = new List<string> { "Nuevo Ingreso", "Transferencia", "Reingreso" };
+            return View("Index", estudiante);
         }
 
         // GET: EstudiantesController/Create
