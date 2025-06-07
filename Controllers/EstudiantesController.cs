@@ -1,13 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Actividad3LengProg3.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Actividad3LengProg3.Controllers
 {
     public class EstudiantesController : Controller
     {
-        // GET: EstudiantesController
+        private static List<EstudianteViewModel> estudiantes = new List<EstudianteViewModel>();
+       
         public ActionResult Index()
         {
+            ViewBag.Carreras = new List<string> { "Ingeniería en Sistemas", "Contabilidad", "Administración", "Psicología" };
+            ViewBag.Turnos = new List<string> { "Mañana", "Tarde", "Noche" };
+            ViewBag.TipoIngreso = new List<string> { "Nuevo Ingreso", "Transferencia", "Reingreso" };
             return View();
         }
 
