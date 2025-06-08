@@ -57,9 +57,22 @@ namespace Actividad3LengProg3.Controllers
         }
 
         // GET: EstudiantesController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Editar(EstudianteViewModel estudiante)
         {
-            return View();
+            var existente = estudiantes.FirstOrDefault(e => e.Matricula == estudiante.Matricula);
+            if (existente == null) return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Carreras = new List<string> { "Ingeniería en Sistemas", "Contabilidad", "Administración", "Psicología" };
+                ViewBag.Turnos = new List<string> { "Mañana", "Tarde", "Noche" };
+                ViewBag.TipoIngreso = new List<string> { "Nuevo Ingreso", "Transferencia", "Reingreso" };
+                return View(estudiante);
+            }
+
+            estudiantes.Remove(existente);
+            estudiantes.Add(estudiante);
+            return RedirectToAction("Lista");
         }
 
         // POST: EstudiantesController/Edit/5
@@ -77,25 +90,16 @@ namespace Actividad3LengProg3.Controllers
             }
         }
 
-        // GET: EstudiantesController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Eliminar(string matricula)
         {
-            return View();
+            var estudiante = estudiantes.FirstOrDefault(e => e.Matricula == matricula);
+            if (estudiante != null)
+            {
+                estudiantes.Remove(estudiante);
+            }
+            return RedirectToAction("Lista");
         }
-
-        // POST: EstudiantesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+        
         }
     }
-}
+
