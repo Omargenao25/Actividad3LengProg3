@@ -37,24 +37,23 @@ namespace Actividad3LengProg3.Controllers
         }
 
         // GET: EstudiantesController/Create
-        public ActionResult Create()
+        public ActionResult Lista()
         {
-            return View();
+            return View(estudiantes);
         }
 
         // POST: EstudiantesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Editar(string matricula)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var estudiante = estudiantes.FirstOrDefault(e => e.Matricula == matricula);
+            if (estudiante == null) return NotFound();
+
+            ViewBag.Carreras = new List<string> { "Ingeniería en Sistemas", "Contabilidad", "Administración", "Psicología" };
+            ViewBag.Turnos = new List<string> { "Mañana", "Tarde", "Noche" };
+            ViewBag.TipoIngreso = new List<string> { "Nuevo Ingreso", "Transferencia", "Reingreso" };
+            return View(estudiante);
         }
 
         // GET: EstudiantesController/Edit/5
