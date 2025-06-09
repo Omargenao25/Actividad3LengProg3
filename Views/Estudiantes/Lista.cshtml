@@ -6,3 +6,42 @@
 }
 
 <h2>Lista de Estudiantes</h2>
+
+<table border="1">
+    <tr>
+        <th>Nombre Completo</th>
+        <th>Matrícula</th>
+        <th>Carrera</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Nacimiento</th>
+        <th>Género</th>
+        <th>Turno</th>
+        <th>Tipo ingreso</th>
+        <th>Beca</th>
+        <th>Acciones</th>
+    </tr>
+    @foreach (var e in Model)
+    {
+        <tr>
+            <td>@e.NombreCompleto</td>
+            <td>@e.Matricula</td>
+            <td>@e.Carrera</td>
+            <td>@e.CorreoInstitucional</td>
+            <td>@e.Telefono</td>
+            <td>@e.FechaNacimiento.ToString("yyyy-MM-dd")</td>
+            <td>@e.Genero</td>
+            <td>@e.Turno</td>
+            <td>@e.TipoIngreso</td>
+            <td>@(e.EstaBecado ? "Sí" : "No")</td>
+            <td>
+                @Html.ActionLink("Editar", "Editar", new { matricula = e.Matricula }) |
+                @Html.ActionLink("Eliminar", "Eliminar", new { matricula = e.Matricula }, new { onclick = "return confirm('¿Seguro que quieres eliminar?');" })
+            </td>
+        </tr>
+    }
+</table>
+
+<p>
+    @Html.ActionLink("Registrar nuevo estudiante", "Index")
+</p>
