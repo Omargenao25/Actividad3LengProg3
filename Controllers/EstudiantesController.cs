@@ -7,12 +7,19 @@ namespace Actividad3LengProg3.Controllers
     public class EstudiantesController : Controller
     {
         private static List<EstudianteViewModel> estudiantes = new List<EstudianteViewModel>();
-       
+
+       // Lista de carreras, turnos, tipos de ingreso, etc.
+        private List<string> carreras = new List<string> { "Ingeniería", "Administración", "Sistemas", "Contabilidad" };
+        private List<string> generos = new List<string> { "Masculino", "Femenino", "Otro" };
+        private List<string> turnos = new List<string> { "Mañana", "Tarde", "Noche" };
+        private List<string> tiposIngreso = new List<string> { "Regular", "Refuerzo", "Reingreso" };
+
         public ActionResult Index()
         {
-            ViewBag.Carreras = new List<string> { "Ingeniería en Sistemas", "Contabilidad", "Administración", "Psicología" };
-            ViewBag.Turnos = new List<string> { "Mañana", "Tarde", "Noche" };
-            ViewBag.TipoIngreso = new List<string> { "Nuevo Ingreso", "Transferencia", "Reingreso" };
+            ViewBag.Carreras = carreras;
+            ViewBag.Generos = generos;
+            ViewBag.Turnos = turnos;
+            ViewBag.TiposIngreso = tiposIngreso;
             return View();
         }
 
