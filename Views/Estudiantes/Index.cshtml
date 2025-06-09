@@ -7,3 +7,97 @@
 }
 
 <h2>Registro de Estudiante</h2>
+@model Actividad3LengProg3.Models.EstudianteViewModel
+
+@{
+    ViewBag.Title = "Registro de Estudiantes";
+}
+
+<h2>Registro de Estudiantes</h2>
+
+@using (Html.BeginForm("Registrar", "Estudiantes", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+
+    <div>
+        @Html.LabelFor(m => m.NombreCompleto)
+        @Html.TextBoxFor(m => m.NombreCompleto)
+        @Html.ValidationMessageFor(m => m.NombreCompleto)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Matricula)
+        @Html.TextBoxFor(m => m.Matricula)
+        @Html.ValidationMessageFor(m => m.Matricula)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Carrera)
+        @Html.DropDownListFor(m => m.Carrera, new SelectList(ViewBag.Carreras))
+        @Html.ValidationMessageFor(m => m.Carrera)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.CorreoInstitucional)
+        @Html.TextBoxFor(m => m.CorreoInstitucional)
+        @Html.ValidationMessageFor(m => m.CorreoInstitucional)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Telefono)
+        @Html.TextBoxFor(m => m.Telefono)
+        @Html.ValidationMessageFor(m => m.Telefono)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.FechaNacimiento)
+        @Html.TextBoxFor(m => m.FechaNacimiento, "{0:yyyy-MM-dd}", new { type = "date" })
+        @Html.ValidationMessageFor(m => m.FechaNacimiento)
+    </div>
+
+    <div>
+        <label>Género</label><br />
+        @foreach (var gen in ViewBag.Generos as List<string>)
+        {
+            @Html.RadioButtonFor(m => m.Genero, gen) @gen
+
+            <br />
+        }
+        @Html.ValidationMessageFor(m => m.Genero)
+    </div>
+
+    <div>
+        <label>Turno</label>
+        @Html.DropDownListFor(m => m.Turno, new SelectList(ViewBag.Turnos))
+        @Html.ValidationMessageFor(m => m.Turno)
+    </div>
+
+    <div>
+        <label>Tipo de ingreso</label>
+        @Html.DropDownListFor(m => m.TipoIngreso, new SelectList(ViewBag.TiposIngreso))
+        @Html.ValidationMessageFor(m => m.TipoIngreso)
+    </div>
+
+    <div>
+        @Html.CheckBoxFor(m => m.EstaBecado)
+        <label>¿Está becado?</label>
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.PorcentajeBeca)
+        @Html.TextBoxFor(m => m.PorcentajeBeca)
+        @Html.ValidationMessageFor(m => m.PorcentajeBeca)
+    </div>
+
+    <div>
+        @Html.CheckBoxFor(m => m.TerminosCondiciones)
+        <label>Acepto términos y condiciones</label>
+        @Html.ValidationMessageFor(m => m.TerminosCondiciones)
+    </div>
+
+    <button type="submit">Registrar</button>
+}
+
+<p>
+    @Html.ActionLink("Ver lista de estudiantes", "Lista")
+</p>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Actividad3LengProg3.Models
 {
@@ -41,8 +42,7 @@ namespace Actividad3LengProg3.Models
         [Range(0, 100)]
         public int? PorcentajeBeca { get; set; }
 
-        [Range(typeof(bool), "true", "true", ErrorMessage = "Debes aceptar los términos.")]
-        public bool AceptaTerminos { get; set; }
-   
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Debe aceptar los términos y condiciones.")]
+        public bool TerminosCondiciones { get; set; }
     }
 }
