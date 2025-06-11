@@ -12,7 +12,7 @@ namespace Actividad3LengProg3.Controllers
         private List<string> carreras = new List<string> { "Ingeniería", "Administración", "Sistemas", "Contabilidad" };
         private List<string> generos = new List<string> { "Masculino", "Femenino", "Otro" };
         private List<string> turnos = new List<string> { "Mañana", "Tarde", "Noche" };
-        private List<string> tiposIngreso = new List<string> { "Regular", "Refuerzo", "Reingreso" };
+        private List<string> tiposIngreso = new List<string> { "Regular", "transferido", "Reingreso" };
 
         public ActionResult Index()
         {
@@ -23,7 +23,6 @@ namespace Actividad3LengProg3.Controllers
             return View();
         }
 
-        // GET: EstudiantesController/Details/5
         public ActionResult Registrar(EstudianteViewModel estudiante)
         {
             if (ModelState.IsValid)
@@ -38,8 +37,13 @@ namespace Actividad3LengProg3.Controllers
                     estudiantes.Add(estudiante);
                     return RedirectToAction("Lista");
                 }
+                if (ModelState.IsValid)
+                {
+                    estudiantes.Add(estudiante);
+                    TempData["Mensaje"] = "Estudiante registrado exitosamente";
+                    return RedirectToAction("Lista");
+                }
             }
-
             // Si hay errores, volver a la vista y cargar listas
             ViewBag.Carreras = carreras;
             ViewBag.Generos = generos;
@@ -48,77 +52,67 @@ namespace Actividad3LengProg3.Controllers
             return View("Index", estudiante);
         }
 
-        // GET: EstudiantesController/Create
         public ActionResult Lista()
         {
             return View(estudiantes);
         }
 
-        // POST: EstudiantesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public ActionResult Editar(string matricula)
         {
+            if (string.IsNullOrEmpty(matricula))
+            {
+                return RedirectToAction("Lista");
+            }
+
             var estudiante = estudiantes.FirstOrDefault(e => e.Matricula == matricula);
             if (estudiante == null)
             {
-                return NotFound();
+                TempData["Error"] = "Estudiante no encontrado";
+                return RedirectToAction("Lista");
             }
 
             ViewBag.Carreras = carreras;
             ViewBag.Generos = generos;
             ViewBag.Turnos = turnos;
             ViewBag.TiposIngreso = tiposIngreso;
-
-            return View(estudiante);
-        
-    }
-
-        // GET: EstudiantesController/Edit/5
-        public ActionResult Editar(EstudianteViewModel estudiante)
-        {
-            var existente = estudiantes.FirstOrDefault(e => e.Matricula == estudiante.Matricula);
-            if (existente == null) return NotFound();
-
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Carreras = new List<string> { "Ingeniería en Sistemas", "Contabilidad", "Administración", "Psicología" };
-                ViewBag.Turnos = new List<string> { "Mañana", "Tarde", "Noche" };
-                ViewBag.TipoIngreso = new List<string> { "Nuevo Ingreso", "Transferencia", "Reingreso" };
-                return View(estudiante);
-            }
-
-            estudiantes.Remove(existente);
-            estudiantes.Add(estudiante);
-            return RedirectToAction("Lista");
+            return View("Index", estudiante);
         }
 
-        // POST: EstudiantesController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(EstudianteViewModel estudiante)
+        public ActionResult Editar(EstudianteViewModel estudiante)
         {
+            
+            var estudianteExistente = estudiantes.FirstOrDefault(e => e.Matricula == estudiante.Matricula);
+            if (estudianteExistente == null)
+            {
+                ModelState.AddModelError("Matricula", "No se encontró el estudiante a editar");
+            }
+
+         
+            if (estudiante.EstaBecado && (!estudiante.PorcentajeBeca.HasValue || estudiante.PorcentajeBeca <= 0))
+            {
+                ModelState.AddModelError("PorcentajeBeca", "Debe especificar un porcentaje de beca válido");
+            }
+
             if (ModelState.IsValid)
             {
-                var existente = estudiantes.FirstOrDefault(e => e.Matricula == estudiante.Matricula);
-                if (existente != null)
+            
+                var index = estudiantes.FindIndex(e => e.Matricula == estudiante.Matricula);
+                if (index >= 0)
                 {
-                    // Actualizar datos
-                    estudiantes.Remove(existente);
-                    estudiantes.Add(estudiante);
+                    estudiantes[index] = estudiante;
+                    TempData["Mensaje"] = "Estudiante actualizado exitosamente";
                     return RedirectToAction("Lista");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Estudiante no encontrado.");
                 }
             }
 
-            ViewBag.Carreras = carreras;
+            // Si hay errores, volver a mostrar el formulario
+             ViewBag.Carreras = carreras;
             ViewBag.Generos = generos;
             ViewBag.Turnos = turnos;
             ViewBag.TiposIngreso = tiposIngreso;
-            return View(estudiante);
+            return View("Index", estudiante);
         }
 
         public ActionResult Eliminar(string matricula)
