@@ -55,20 +55,21 @@ namespace Actividad3LengProg3.Controllers
         public ActionResult Lista()
         {
             return View(estudiantes);
+
         }
-
-
+        [HttpGet]
         public ActionResult Editar(string matricula)
         {
             if (string.IsNullOrEmpty(matricula))
             {
+                TempData["Error"] = "Matrícula inválida.";
                 return RedirectToAction("Lista");
             }
 
             var estudiante = estudiantes.FirstOrDefault(e => e.Matricula == matricula);
             if (estudiante == null)
             {
-                TempData["Error"] = "Estudiante no encontrado";
+                TempData["Error"] = "Estudiante no encontrado.";
                 return RedirectToAction("Lista");
             }
 
@@ -76,52 +77,66 @@ namespace Actividad3LengProg3.Controllers
             ViewBag.Generos = generos;
             ViewBag.Turnos = turnos;
             ViewBag.TiposIngreso = tiposIngreso;
+
             return View("Index", estudiante);
         }
 
         [HttpPost]
         public ActionResult Editar(EstudianteViewModel estudiante)
         {
-            
             var estudianteExistente = estudiantes.FirstOrDefault(e => e.Matricula == estudiante.Matricula);
             if (estudianteExistente == null)
             {
-                ModelState.AddModelError("Matricula", "No se encontró el estudiante a editar");
+                TempData["Error"] = "No se encontró el estudiante a editar.";
+                return RedirectToAction("Lista");
             }
 
-         
             if (estudiante.EstaBecado && (!estudiante.PorcentajeBeca.HasValue || estudiante.PorcentajeBeca <= 0))
             {
-                ModelState.AddModelError("PorcentajeBeca", "Debe especificar un porcentaje de beca válido");
+                ModelState.AddModelError("PorcentajeBeca", "Debe especificar un porcentaje de beca válido.");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-            
-                var index = estudiantes.FindIndex(e => e.Matricula == estudiante.Matricula);
-                if (index >= 0)
-                {
-                    estudiantes[index] = estudiante;
-                    TempData["Mensaje"] = "Estudiante actualizado exitosamente";
-                    return RedirectToAction("Lista");
-                }
+                ViewBag.Carreras = carreras;
+                ViewBag.Generos = generos;
+                ViewBag.Turnos = turnos;
+                ViewBag.TiposIngreso = tiposIngreso;
+
+                return View("Index", estudiante);
             }
 
-            // Si hay errores, volver a mostrar el formulario
-             ViewBag.Carreras = carreras;
-            ViewBag.Generos = generos;
-            ViewBag.Turnos = turnos;
-            ViewBag.TiposIngreso = tiposIngreso;
-            return View("Index", estudiante);
+            estudianteExistente.NombreCompleto = estudiante.NombreCompleto;
+            estudianteExistente.Carrera = estudiante.Carrera;
+            estudianteExistente.CorreoInstitucional = estudiante.CorreoInstitucional;
+            estudianteExistente.Telefono = estudiante.Telefono;
+            estudianteExistente.FechaNacimiento = estudiante.FechaNacimiento;
+            estudianteExistente.Genero = estudiante.Genero;
+            estudianteExistente.Turno = estudiante.Turno;
+            estudianteExistente.TipoIngreso = estudiante.TipoIngreso;
+            estudianteExistente.EstaBecado = estudiante.EstaBecado;
+            estudianteExistente.PorcentajeBeca = estudiante.PorcentajeBeca;
+            estudianteExistente.AceptaTerminos = estudiante.AceptaTerminos;
+
+            TempData["Mensaje"] = "Estudiante actualizado exitosamente.";
+            return RedirectToAction("Lista");
         }
+
+
 
         public ActionResult Eliminar(string matricula)
         {
-           var estudiante = estudiantes.FirstOrDefault(e => e.Matricula == matricula);
+            var estudiante = estudiantes.FirstOrDefault(e => e.Matricula == matricula);
             if (estudiante != null)
             {
                 estudiantes.Remove(estudiante);
+                TempData["Mensaje"] = "Estudiante eliminado correctamente.";
             }
+            else
+            {
+                TempData["Error"] = "Estudiante no encontrado.";
+            }
+
             return RedirectToAction("Lista");
         }
 

@@ -1,158 +1,134 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-    ViewBag.Title = "Registro de Estudiante";
-
-}
-
-<h2>Registro de Estudiante</h2>
 @model Actividad3LengProg3.Models.EstudianteViewModel
 
-        @using (Html.BeginForm("Registrar", "Estudiantes", FormMethod.Post))
-        {
-            @Html.ValidationSummary(true, "", new { @class = "validation-summary-errors" })
+@{
+    ViewBag.Title = Model?.Matricula == null ? "Registrar Estudiante" : "Editar Estudiante";
+    bool esEdicion = Model?.Matricula != null;
+    string accionFormulario = esEdicion ? "Editar" : "Registrar";
+    string textoBoton = esEdicion ? "Guardar Cambios" : "Registrar Estudiante";
+}
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-user" style="color: var(--primary-color);"></i>
-                        @Html.DisplayNameFor(m => m.NombreCompleto)
-                    </label>
-                    @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control", placeholder = "Ingrese nombre completo" })
-                    @Html.ValidationMessageFor(m => m.NombreCompleto, "", new { @class = "field-validation-error" })
-                </div>
+<div class="container py-5">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-user-graduate me-2"></i>@ViewBag.Title</h4>
+        </div>
+        <div class="card-body">
 
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-id-card" style="color: var(--primary-color);"></i>
-                        @Html.DisplayNameFor(m => m.Matricula)
-                    </label>
-                    @Html.TextBoxFor(m => m.Matricula, new { @class = "form-control", placeholder = "Ingrese matrícula" })
-                    @Html.ValidationMessageFor(m => m.Matricula, "", new { @class = "field-validation-error" })
-                </div>
-            </div>
+            @using (Html.BeginForm(accionFormulario, "Estudiantes", FormMethod.Post))
+            {
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-graduation-cap" style="color: var(--primary-color);"></i>
-                        @Html.DisplayNameFor(m => m.Carrera)
-                    </label>
-                    @Html.DropDownListFor(m => m.Carrera, new SelectList(ViewBag.Carreras), "Seleccione una carrera", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Carrera, "", new { @class = "field-validation-error" })
-                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Nombre Completo</label>
+                        @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.NombreCompleto, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-envelope" style="color: var(--primary-color);"></i>
-                        @Html.DisplayNameFor(m => m.CorreoInstitucional)
-                    </label>
-                    @Html.TextBoxFor(m => m.CorreoInstitucional, new { @class = "form-control", placeholder = "estudiante@universidad.edu", type = "email" })
-                    @Html.ValidationMessageFor(m => m.CorreoInstitucional, "", new { @class = "field-validation-error" })
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-phone" style="color: var(--primary-color);"></i>
-                        @Html.DisplayNameFor(m => m.Telefono)
-                    </label>
-                    @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "(000) 000-0000" })
-                    @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "field-validation-error" })
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-calendar" style="color: var(--primary-color);"></i>
-                        @Html.DisplayNameFor(m => m.FechaNacimiento)
-                    </label>
-                    @Html.TextBoxFor(m => m.FechaNacimiento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                    @Html.ValidationMessageFor(m => m.FechaNacimiento, "", new { @class = "field-validation-error" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">
-                    <i class="fas fa-venus-mars" style="color: var(--primary-color);"></i>
-                    Género
-                </label>
-                <div class="radio-group">
-                    @foreach (var gen in ViewBag.Generos as List<string>)
-                    {
-                        <div style="margin-bottom: 0.5rem;">
-                            @Html.RadioButtonFor(m => m.Genero, gen)
-                            <label>@gen</label>
-                        </div>
-                    }
-                </div>
-                @Html.ValidationMessageFor(m => m.Genero, "", new { @class = "field-validation-error" })
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-clock" style="color: var(--primary-color);"></i>
-                        Turno
-                    </label>
-                    @Html.DropDownListFor(m => m.Turno, new SelectList(ViewBag.Turnos), "Seleccione un turno", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Turno, "", new { @class = "field-validation-error" })
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-door-open" style="color: var(--primary-color);"></i>
-                        Tipo de ingreso
-                    </label>
-                    @Html.DropDownListFor(m => m.TipoIngreso, new SelectList(ViewBag.TiposIngreso), "Seleccione tipo de ingreso", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.TipoIngreso, "", new { @class = "field-validation-error" })
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <div class="checkbox-group">
-                        @Html.CheckBoxFor(m => m.EstaBecado, new { id = "becado" })
-                        <label for="becado">
-                            <i class="fas fa-award" style="color: var(--primary-color);"></i>
-                            ¿Está becado?
-                        </label>
+                    <div class="col-md-6">
+                        <label class="form-label">Matrícula</label>
+                        @{
+                            var atributosMatricula = new Dictionary<string, object> {
+                    { "class", "form-control" },
+                    { "placeholder", "Ej: A2025001" }
+                    };
+                            if (esEdicion)
+                            {
+                                atributosMatricula.Add("readonly", "readonly");
+                            }
+                        }
+                        @Html.TextBoxFor(m => m.Matricula, atributosMatricula)
+                        @Html.ValidationMessageFor(m => m.Matricula, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-percent" style="color: var(--primary-color);"></i>
-                        @Html.DisplayNameFor(m => m.PorcentajeBeca)
-                    </label>
-                    @Html.TextBoxFor(m => m.PorcentajeBeca, new { @class = "form-control", placeholder = "0-100", type = "number", min = "0", max = "100" })
-                    @Html.ValidationMessageFor(m => m.PorcentajeBeca, "", new { @class = "field-validation-error" })
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Carrera</label>
+                        @Html.DropDownListFor(m => m.Carrera, new SelectList(ViewBag.Carreras), "Seleccione una carrera", new { @class = "form-select" })
+                        @Html.ValidationMessageFor(m => m.Carrera, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Correo Institucional</label>
+                        @Html.TextBoxFor(m => m.CorreoInstitucional, new { @class = "form-control", type = "email" })
+                        @Html.ValidationMessageFor(m => m.CorreoInstitucional, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="checkbox-group">
-                    @Html.CheckBoxFor(m => m.AceptaTerminos, new { id = "terminos" })
-                    <label for="terminos">
-                        <i class="fas fa-check-circle" style="color: var(--primary-color);"></i>
-                        Acepto términos y condiciones
-                    </label>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Teléfono</label>
+                        @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "(000) 000-0000" })
+                        @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Fecha de Nacimiento</label>
+                        @Html.TextBoxFor(m => m.FechaNacimiento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                        @Html.ValidationMessageFor(m => m.FechaNacimiento, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                @Html.ValidationMessageFor(m => m.AceptaTerminos, "", new { @class = "field-validation-error" })
-            </div>
 
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-save"></i> Registrar Estudiante
-            </button>
-        }
+                <div class="mb-3">
+                    <label class="form-label">Género</label>
+                    <div class="d-flex gap-3">
+                        @foreach (var gen in ViewBag.Generos as List<string>)
+                        {
+                            <div class="form-check">
+                                @Html.RadioButtonFor(m => m.Genero, gen, new { @class = "form-check-input", id = gen })
+                                <label class="form-check-label" for="@gen">@gen</label>
+                            </div>
+                        }
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Genero, "", new { @class = "text-danger" })
+                </div>
 
-        <div style="text-align: center;">
-            @Html.ActionLink("Ver lista de estudiantes", "Lista", null, new { @class = "link-btn" })
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Turno</label>
+                        @Html.DropDownListFor(m => m.Turno, new SelectList(ViewBag.Turnos), "Seleccione turno", new { @class = "form-select" })
+                        @Html.ValidationMessageFor(m => m.Turno, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Tipo de Ingreso</label>
+                        @Html.DropDownListFor(m => m.TipoIngreso, new SelectList(ViewBag.TiposIngreso), "Seleccione tipo", new { @class = "form-select" })
+                        @Html.ValidationMessageFor(m => m.TipoIngreso, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(m => m.EstaBecado, new { @class = "form-check-input", id = "beca" })
+                            <label class="form-check-label" for="beca">¿Está becado?</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Porcentaje de Beca</label>
+                        @Html.TextBoxFor(m => m.PorcentajeBeca, new { @class = "form-control", type = "number", placeholder = "Ej: 50", min = "0", max = "100" })
+                        @Html.ValidationMessageFor(m => m.PorcentajeBeca, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(m => m.AceptaTerminos, new { @class = "form-check-input", id = "terminos" })
+                            <label class="form-check-label" for="terminos">Acepta Términos</label>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.AceptaTerminos, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i> @textoBoton
+                    </button>
+                    @Html.ActionLink("Cancelar", "Lista", null, new { @class = "btn btn-secondary ms-2" })
+                </div>
+            }
         </div>
     </div>
-    </div>
-    </div>   
-    
-
-        
+</div>
